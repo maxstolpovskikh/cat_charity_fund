@@ -1,0 +1,7 @@
+APP_TITLE=Название
+DATABASE_URL=sqlite+aiosqlite:///./fastapi.db
+RESET_DATABASE=False
+DESCRIPTION=Описание
+SECRET=secret
+FIRST_SUPERUSER_EMAIL=admin@mail.com
+FIRST_SUPERUSER_PASSWORD=password

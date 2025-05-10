@@ -4,9 +4,10 @@ from pydantic import BaseSettings, EmailStr
 
 
 class Settings(BaseSettings):
-    app_title: str = 'Кошачий благотворительный фонд'
-    description: str = 'Сервис для поддержки котиков!'
+    app_title: str = 'AppTitle'
+    description: str = 'ServiseDescription'
     database_url: str
+    reset_database: bool = False
     secret: str = 'SECRET'
     first_superuser_email: Optional[EmailStr] = None
     first_superuser_password: Optional[str] = None

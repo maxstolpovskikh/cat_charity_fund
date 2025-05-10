@@ -15,6 +15,8 @@ get_user_manager_context = contextlib.asynccontextmanager(get_user_manager)
 
 async def create_db_and_tables():
     async with engine.begin() as conn:
+        if settings.reset_database:
+            await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
 
 async def create_user(
