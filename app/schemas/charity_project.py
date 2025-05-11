@@ -11,9 +11,7 @@ class CharityProjectBase(BaseModel):
 
 
 class CharityProjectCreate(CharityProjectBase):
-    class Config:
-        # Это заставит Pydantic не принимать другие поля, которые не указаны в модели
-        extra = "forbid"
+    pass
 
 
 class CharityProjectUpdate(BaseModel):
@@ -21,15 +19,14 @@ class CharityProjectUpdate(BaseModel):
     description: Optional[str] = Field(None, min_length=1)
     full_amount: Optional[PositiveInt] = None
 
-    @validator("full_amount")
+    @validator('full_amount')
     def validate_full_amount(cls, value):
         if value is not None and value <= 0:
-            raise ValueError("Требуемая сумма должна быть больше 0")
+            raise ValueError('Требуемая сумма должна быть больше 0')
         return value
-        
+
     class Config:
-        # Это заставит Pydantic не принимать другие поля, которые не указаны в модели
-        extra = "forbid"
+        extra = 'forbid'
 
 
 class CharityProjectDB(CharityProjectBase):

@@ -8,7 +8,7 @@ from app.core.db import Base, engine, get_async_session
 from app.core.user import get_user_db, get_user_manager
 from app.schemas.user import UserCreate
 
-from app.models import User, CharityProject, Donation
+from app.models import User, CharityProject, Donation # noqa
 
 get_async_session_context = contextlib.asynccontextmanager(get_async_session)
 get_user_db_context = contextlib.asynccontextmanager(get_user_db)
@@ -20,6 +20,7 @@ async def create_db_and_tables():
         if settings.reset_database:
             await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
+
 
 async def create_user(
         email: EmailStr, password: str, is_superuser: bool = False

@@ -6,8 +6,7 @@ from .base import AbstractBaseModel
 class Donation(AbstractBaseModel):
     user_id = Column(Integer, ForeignKey(
         'user.id',
-        name='fk_donation_user_id_user',
-        )
+        name='fk_donation_user_id_user',)
     )
     comment = Column(Text, nullable=True)
     full_amount = Column(Integer, nullable=False)

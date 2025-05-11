@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, Integer, String, Text, Index
+from sqlalchemy import Boolean, Column, Integer, String, Text
 
 from .base import AbstractBaseModel
 
