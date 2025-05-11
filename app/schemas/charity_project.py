@@ -6,11 +6,12 @@ from pydantic import BaseModel, Field, PositiveInt
 
 class CharityProjectBase(BaseModel):
     name: str = Field(min_length=1, max_length=100)
-    description: str
+    description: str = Field(..., min_length=1)
+    full_amount: PositiveInt
 
 
 class CharityProjectCreate(CharityProjectBase):
-    full_amount: PositiveInt
+    pass
 
 
 class CharityProjectUpdate(BaseModel):

@@ -5,8 +5,8 @@ from app.api.endpoints import charity_router, donation_router, user_router
 main_router = APIRouter()
 main_router.include_router(user_router)
 main_router.include_router(
-    donation_router, prefix='/donation', tags=['Donations']
+    donation_router, prefix='/donation', tags=['donations']
 )
 main_router.include_router(
-    charity_router, prefix='/charity_projects', tags=['CharityProjects']
+    charity_router, prefix='/charity_projects', tags=['charity_projects']
 )
