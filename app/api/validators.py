@@ -63,6 +63,12 @@ async def check_project_before_delete(
             detail='В проект были внесены средства, не подлежит удалению!'
         )
     
+    if project.fully_invested:
+        raise HTTPException(
+            status_code=HTTPStatus.BAD_REQUEST,
+            detail='Закрытый проект нельзя удалить!'
+        )
+    
 async def check_charity_project_invested_sum(
         project: CharityProject,
         new_amount: int

@@ -19,8 +19,8 @@ router = APIRouter()
 async def get_all_donations(
         session: AsyncSession = Depends(get_async_session)
 ):
-    reservations = await donation_crud.get_multi(session)
-    return reservations
+    donations = await donation_crud.get_multi(session)
+    return donations
 
 
 @router.get(

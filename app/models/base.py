@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Annotated
 
 from pydantic import Field
-from sqlalchemy import Column, Integer, DateTime
+from sqlalchemy import Column, Integer, DateTime, Boolean
 
 from app.core.db import Base
 
