@@ -16,14 +16,6 @@ router.include_router(
     tags=['auth'],
 )
 
-'''
-router.include_router(
-    fastapi_users.get_users_router(UserRead, UserUpdate),
-    prefix='/users',
-    tags=['users'],
-)
-'''
-
 users_router = fastapi_users.get_users_router(UserRead, UserUpdate)
 users_router.routes = [
     rout for rout in users_router.routes if rout.name != 'users:delete_user'
