@@ -36,7 +36,7 @@ async def invest_money(
     projects = await get_uninvested_objects(CharityProject, session)
     if not projects:
         return
-    
+
     donations = await get_uninvested_objects(Donation, session)
     if not donations:
         return
@@ -44,28 +44,28 @@ async def invest_money(
     for project in projects:
         if project.fully_invested:
             continue
-        
+
         need_to_invest = project.full_amount - project.invested_amount
-        
+
         for donation in donations:
             if donation.fully_invested:
                 continue
-            
-            donation_available = donation.full_amount - donation.invested_amount
-            
-            if donation_available <= need_to_invest:
-                project.invested_amount += donation_available
+
+            donate_available = donation.full_amount - donation.invested_amount
+
+            if donate_available <= need_to_invest:
+                project.invested_amount += donate_available
                 donation.invested_amount = donation.full_amount
                 await close_object_if_invested(donation)
-                
-                need_to_invest -= donation_available
+
+                need_to_invest -= donate_available
             else:
                 project.invested_amount += need_to_invest
                 donation.invested_amount += need_to_invest
                 need_to_invest = 0
-            
+
             if need_to_invest == 0:
                 await close_object_if_invested(project)
                 break
-    
+
     await session.commit()

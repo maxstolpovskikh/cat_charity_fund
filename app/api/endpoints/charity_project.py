@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, status, HTTPException, Request
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.validators import (check_charity_project_exists,
@@ -41,11 +41,11 @@ async def create_charity_project(
     session: AsyncSession = Depends(get_async_session),
 ):
     await check_name_duplicate(charity_project.name, session)
-    
+
     new_project = await charity_project_crud.create(charity_project, session)
     await invest_money(session)
     await session.refresh(new_project)
-    
+
     return new_project
 
 
@@ -60,12 +60,12 @@ async def update_charity_project(
     session: AsyncSession = Depends(get_async_session),
 ):
     project = await check_charity_project_exists(project_id, session)
-    
+
     if obj_in.name is not None:
         await check_name_duplicate(obj_in.name, session)
-    
+
     await check_project_before_update(project, obj_in)
-    
+
     project = await charity_project_crud.update(project, obj_in, session)
     return project
 
@@ -81,6 +81,6 @@ async def delete_charity_project(
 ):
     project = await check_charity_project_exists(project_id, session)
     await check_project_before_delete(project)
-    
+
     project = await charity_project_crud.remove(project, session)
     return project

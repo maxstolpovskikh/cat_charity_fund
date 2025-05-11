@@ -1,10 +1,11 @@
 from http import HTTPStatus
+
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud.charity_project import charity_project_crud
-from app.schemas.charity_project import CharityProjectUpdate
 from app.models.charity_project import CharityProject
+from app.schemas.charity_project import CharityProjectUpdate
 
 
 async def check_name_duplicate(
@@ -43,7 +44,7 @@ async def check_project_before_update(
             status_code=HTTPStatus.BAD_REQUEST,
             detail='Закрытый проект нельзя редактировать!'
         )
-    
+
     if (
         obj_in.full_amount is not None and
         obj_in.full_amount < project.invested_amount
@@ -62,13 +63,14 @@ async def check_project_before_delete(
             status_code=HTTPStatus.BAD_REQUEST,
             detail='В проект были внесены средства, не подлежит удалению!'
         )
-    
+
     if project.fully_invested:
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST,
             detail='Закрытый проект нельзя удалить!'
         )
-    
+
+
 async def check_charity_project_invested_sum(
         project: CharityProject,
         new_amount: int
