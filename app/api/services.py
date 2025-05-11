@@ -14,7 +14,7 @@ async def get_uninvested_objects(
 ) -> List[Union[CharityProject, Donation]]:
     objects = await session.execute(
         select(model_in).where(
-            model_in.fully_invested == False
+            model_in.fully_invested.is_(False)
         ).order_by(
             model_in.create_date
         )

@@ -7,6 +7,8 @@ from app.crud.charity_project import charity_project_crud
 from app.models.charity_project import CharityProject
 from app.schemas.charity_project import CharityProjectUpdate
 
+MESSAGE = 'Нелья установить значение full_amount меньше уже вложенной суммы.'
+
 
 async def check_name_duplicate(
     project_name: str,
@@ -51,7 +53,7 @@ async def check_project_before_update(
     ):
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST,
-            detail='Нелья установить значение full_amount меньше уже вложенной суммы.'
+            detail=MESSAGE
         )
 
 

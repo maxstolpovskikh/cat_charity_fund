@@ -22,4 +22,3 @@ class CRUDDonation(CRUDBase):
 
 
 donation_crud = CRUDDonation(Donation)
-
