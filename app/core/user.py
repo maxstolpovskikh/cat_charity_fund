@@ -39,7 +39,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
         self,
         password: str,
         user: Union[UserCreate, User],
-    ) -> None:
+    ):
         if len(password) < 3:
             raise InvalidPasswordException(
                 reason='Password should be at least 3 characters'

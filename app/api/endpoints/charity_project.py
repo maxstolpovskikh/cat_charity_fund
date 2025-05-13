@@ -13,7 +13,6 @@ from app.crud.charity_project import charity_project_crud
 from app.schemas.charity_project import (CharityProjectCreate,
                                          CharityProjectDB,
                                          CharityProjectUpdate)
-from app.api.services import invest_money
 
 router = APIRouter()
 
@@ -41,12 +40,9 @@ async def create_charity_project(
     session: AsyncSession = Depends(get_async_session),
 ):
     await check_name_duplicate(charity_project.name, session)
-
-    new_project = await charity_project_crud.create(charity_project, session)
-    await invest_money(session)
-    await session.refresh(new_project)
-
-    return new_project
+    return await charity_project_crud.create_with_investment(
+        charity_project, session
+    )
 
 
 @router.patch(
@@ -66,8 +62,7 @@ async def update_charity_project(
 
     await check_project_before_update(project, obj_in)
 
-    project = await charity_project_crud.update(project, obj_in, session)
-    return project
+    return await charity_project_crud.update(project, obj_in, session)
 
 
 @router.delete(

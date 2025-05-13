@@ -71,3 +71,16 @@ class CRUDBase:
         await session.delete(db_obj)
         await session.commit()
         return db_obj
+
+    async def get_uninvested(
+            self,
+            session: AsyncSession,
+    ):
+        objects = await session.execute(
+            select(self.model).where(
+                self.model.fully_invested.is_(False)
+            ).order_by(
+                self.model.create_date
+            )
+        )
+        return objects.scalars().all()
