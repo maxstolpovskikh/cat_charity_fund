@@ -22,7 +22,7 @@ router = APIRouter()
     response_model=List[CharityProjectDB],
     response_model_exclude_none=True
 )
-async def get_all_charity_projects(
+async def get_all(
     session: AsyncSession = Depends(get_async_session),
 ):
     return await charity_project_crud.get_multi(session)
@@ -35,7 +35,7 @@ async def get_all_charity_projects(
     dependencies=[Depends(current_superuser)],
     status_code=status.HTTP_200_OK
 )
-async def create_charity_project(
+async def create(
     charity_project: CharityProjectCreate,
     session: AsyncSession = Depends(get_async_session),
 ):
@@ -50,7 +50,7 @@ async def create_charity_project(
     response_model=CharityProjectDB,
     dependencies=[Depends(current_superuser)]
 )
-async def update_charity_project(
+async def update(
     project_id: int,
     obj_in: CharityProjectUpdate,
     session: AsyncSession = Depends(get_async_session),
@@ -70,7 +70,7 @@ async def update_charity_project(
     response_model=CharityProjectDB,
     dependencies=[Depends(current_superuser)]
 )
-async def delete_charity_project(
+async def delete(
     project_id: int,
     session: AsyncSession = Depends(get_async_session),
 ):

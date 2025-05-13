@@ -1,77 +1,87 @@
 from datetime import datetime
-from typing import Union
+from typing import List, Optional, Tuple, Union
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-#from app.crud.charity_project import charity_project_crud
-#from app.crud.donation import donation_crud
 from app.models.charity_project import CharityProject
 from app.models.donation import Donation
 
 
-async def close_object_if_invested(
-    obj: Union[CharityProject, Donation],
-):
-    if obj.full_amount == obj.invested_amount:
-        obj.fully_invested = True
-        obj.close_date = datetime.now()
-
-
-async def invest_money(
+async def get_uninvested(
+    model,
     session: AsyncSession,
 ):
-    projects_query = await session.execute(
-        select(CharityProject).where(
-            CharityProject.fully_invested.is_(False)
+    objects = await session.execute(
+        select(model).where(
+            model.fully_invested.is_(False)
         ).order_by(
-            CharityProject.create_date
+            model.create_date
         )
     )
-    projects = projects_query.scalars().all()
-    if not projects:
-        return
+    return objects.scalars().all()
 
-    donations_query = await session.execute(
-        select(Donation).where(
-            Donation.fully_invested.is_(False)
-        ).order_by(
-            Donation.create_date
-        )
-    )
-    donations = donations_query.scalars().all()
-    if not donations:
-        return
 
+async def close(
+    obj: Union[CharityProject, Donation]
+):
+    obj.fully_invested = True
+    obj.close_date = datetime.now()
+
+
+async def distribute_donation(
+    donation: Donation,
+    projects: List[CharityProject]
+):
+    updated_projects = []
+    donation_used = False
     for project in projects:
         if project.fully_invested:
             continue
-
         need_to_invest = project.full_amount - project.invested_amount
-
-        for donation in donations:
-            if donation.fully_invested:
-                continue
-
-            donate_available = donation.full_amount - donation.invested_amount
-
-            if donate_available <= need_to_invest:
-                project.invested_amount += donate_available
-                donation.invested_amount = donation.full_amount
-                if donation.full_amount == donation.invested_amount:
-                    donation.fully_invested = True
-                    donation.close_date = datetime.now()
-
-                need_to_invest -= donate_available
-            else:
-                project.invested_amount += need_to_invest
-                donation.invested_amount += need_to_invest
-                need_to_invest = 0
-
-            if need_to_invest == 0:
-                if project.full_amount == project.invested_amount:
-                    project.fully_invested = True
-                    project.close_date = datetime.now()
+        donate_available = donation.full_amount - donation.invested_amount
+        if donate_available <= need_to_invest:
+            project.invested_amount += donate_available
+            donation.invested_amount = donation.full_amount
+            await close(donation)
+            donation_used = True
+            if project.full_amount == project.invested_amount:
+                await close(project)
+            updated_projects.append(project)
+            break
+        else:
+            project.invested_amount = project.full_amount
+            donation.invested_amount += need_to_invest
+            await close(project)
+            updated_projects.append(project)
+            if donation.full_amount == donation.invested_amount:
+                await close(donation)
+                donation_used = True
                 break
 
-    await session.commit()
+    return updated_projects, donation_used
+
+
+async def process_donations(
+    donations: List[Donation],
+    projects: List[CharityProject],
+    session: AsyncSession
+):
+    if not donations or not projects:
+        return
+    for donation in donations:
+        if donation.fully_invested:
+            continue
+        updated_projects, donation_used = await distribute_donation(
+            donation, projects
+        )
+        if updated_projects or donation_used:
+            await session.commit()
+
+
+async def invest(
+    session: AsyncSession,
+):
+    projects = await get_uninvested(CharityProject, session)
+    donations = await get_uninvested(Donation, session)
+    await process_donations(donations, projects, session)

@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.services import invest_money
+from app.api.services import invest
 from app.crud.base import CRUDBase
 from app.models import Donation, User
 
@@ -31,7 +31,7 @@ class CRUDDonation(CRUDBase):
         db_obj = self.model(**obj_in_data)
         session.add(db_obj)
         await session.commit()
-        await invest_money(session)
+        await invest(session)
         await session.refresh(db_obj)
         return db_obj
 
