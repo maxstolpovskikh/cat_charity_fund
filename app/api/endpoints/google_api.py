@@ -1,3 +1,4 @@
+from typing import Any
 from datetime import datetime
 
 from aiogoogle import Aiogoogle
@@ -16,7 +17,7 @@ router = APIRouter()
 
 @router.post(
     '/',
-    response_model=list[dict[str, int]],
+    response_model=list[dict[str, Any]],
     dependencies=[Depends(current_superuser)],
 )
 async def get_report(

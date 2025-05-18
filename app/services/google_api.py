@@ -56,12 +56,10 @@ async def spreadsheets_update_value(
     for project in projects:
         new_row = [
             project['name'],
-            str(project['delta']),
+            project['delta'],
             project['description']
         ]
         table_values.append(new_row)
-
-    print(table_values)
 
     update_body = {
         'majorDimension': 'ROWS',
