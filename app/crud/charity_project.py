@@ -1,4 +1,6 @@
-from sqlalchemy import select
+from typing import List, Any
+
+from sqlalchemy import extract, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.services import invest
@@ -24,7 +26,7 @@ class CRUDCharityProject(CRUDBase):
             self,
             obj_in,
             session: AsyncSession,
-    ):
+    ) -> List[dict[str, Any]]:
         obj_in_data = obj_in.dict()
         db_obj = self.model(**obj_in_data)
         session.add(db_obj)
@@ -32,6 +34,30 @@ class CRUDCharityProject(CRUDBase):
         await invest(session)
         await session.refresh(db_obj)
         return db_obj
+
+    async def get_projects_by_completion_rate(
+            self,
+            session: AsyncSession,
+    ):
+        projects = await session.execute(
+            select(CharityProject).where(
+                CharityProject.fully_invested
+            ).order_by(
+                extract('epoch', CharityProject.close_date) - extract(
+                    'epoch', CharityProject.create_date
+                )))
+        projects = projects.scalars().all()
+
+        res = [
+            {
+                'name': project.name,
+                'delta': str(project.close_date - project.create_date),
+                'description': project.description
+            }
+            for project in projects
+        ]
+
+        return res
 
 
 charity_project_crud = CRUDCharityProject(CharityProject)
