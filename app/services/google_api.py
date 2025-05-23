@@ -6,7 +6,8 @@ from app.core.config import settings
 FORMAT = "%Y/%m/%d %H:%M:%S"
 
 
-async def spreadsheets_create(wrapper_services: Aiogoogle) -> str:
+async def create_spreadsheet(wrapper_services: Aiogoogle) -> str:
+    """Создает новый Google Sheets документ с отчетом."""
     now_date_time = datetime.now().strftime(FORMAT)
     service = await wrapper_services.discover('sheets', 'v4')
     spreadsheet_body = {
@@ -28,7 +29,8 @@ async def spreadsheets_create(wrapper_services: Aiogoogle) -> str:
 async def set_user_permissions(
         spreadsheetid: str,
         wrapper_services: Aiogoogle
-):
+) -> None:
+    """Устанавливает права доступа к Google Sheets документу."""
     permissions_body = {'type': 'user',
                         'role': 'writer',
                         'emailAddress': settings.email}
@@ -45,7 +47,8 @@ async def spreadsheets_update_value(
         spreadsheetid: str,
         projects: list,
         wrapper_services: Aiogoogle
-):
+) -> None:
+    """Заполняет Google Sheets данными о проектах."""
     now_date_time = datetime.now().strftime(FORMAT)
     service = await wrapper_services.discover('sheets', 'v4')
     table_values = [

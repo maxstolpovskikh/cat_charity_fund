@@ -5,15 +5,17 @@ from typing import Optional
 
 
 class DonationBase(BaseModel):
+    """Базовая схема пожертвования."""
     full_amount: PositiveInt
     comment: Optional[str] = None
 
 
 class DonationCreate(DonationBase):
-    pass
+    """Схема создания пожертвования."""
 
 
 class DonationDB(BaseModel):
+    """Схема пожертвования."""
     id: int
     create_date: datetime
     full_amount: PositiveInt
@@ -24,6 +26,7 @@ class DonationDB(BaseModel):
 
 
 class DonationAdminDB(BaseModel):
+    """Схема пожертвования для администратора."""
     id: int
     user_id: int
     full_amount: PositiveInt

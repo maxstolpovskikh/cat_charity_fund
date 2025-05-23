@@ -14,6 +14,7 @@ router = APIRouter()
     '/',
     response_model=list[DonationAdminDB],
     dependencies=[Depends(current_superuser)],
+    summary='Список всех пожертвований'
 )
 async def get_all(
         session: AsyncSession = Depends(get_async_session)
@@ -25,6 +26,7 @@ async def get_all(
     '/my',
     response_model=list[DonationDB],
     response_model_exclude={'user_id'},
+    summary='Список ваших пожертвований'
 )
 async def get_my(
     session: AsyncSession = Depends(get_async_session),
@@ -39,6 +41,7 @@ async def get_my(
     '/',
     response_model=DonationDB,
     response_model_exclude_none=True,
+    summary='Создать пожертвование'
 )
 async def create(
         donation_in: DonationCreate,

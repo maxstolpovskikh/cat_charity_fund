@@ -1,11 +1,9 @@
-from sqlalchemy import Boolean, Column, Integer, String, Text
+from sqlalchemy import Column, String, Text
 
 from .base import AbstractBaseModel
 
 
 class CharityProject(AbstractBaseModel):
+    """Модель благотворительного проекта."""
     name = Column(String(100), unique=True, nullable=False)
     description = Column(Text, nullable=False)
-    full_amount = Column(Integer, nullable=False)
-    invested_amount = Column(Integer, default=0, nullable=False)
-    fully_invested = Column(Boolean, default=False, nullable=False)

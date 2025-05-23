@@ -5,16 +5,18 @@ from pydantic import BaseModel, Field, PositiveInt, validator
 
 
 class CharityProjectBase(BaseModel):
+    """Базовая схема проекта."""
     name: str = Field(..., min_length=1, max_length=100)
     description: str = Field(..., min_length=1)
     full_amount: PositiveInt
 
 
 class CharityProjectCreate(CharityProjectBase):
-    pass
+    """Схема создания проекта."""
 
 
 class CharityProjectUpdate(BaseModel):
+    """Схема обновления проекта."""
     name: Optional[str] = Field(None, min_length=1, max_length=100)
     description: Optional[str] = Field(None, min_length=1)
     full_amount: Optional[PositiveInt] = None
@@ -30,6 +32,7 @@ class CharityProjectUpdate(BaseModel):
 
 
 class CharityProjectDB(CharityProjectBase):
+    """Схема проекта."""
     id: int
     invested_amount: int
     fully_invested: bool

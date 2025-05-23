@@ -1,9 +1,9 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.services import invest
 from app.crud.base import CRUDBase
 from app.models import Donation, User
+from app.services.investment import invest
 
 
 class CRUDDonation(CRUDBase):

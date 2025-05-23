@@ -20,7 +20,8 @@ router = APIRouter()
 @router.get(
     '/',
     response_model=List[CharityProjectDB],
-    response_model_exclude_none=True
+    response_model_exclude_none=True,
+    summary='Cписок всех благотворительных проектов'
 )
 async def get_all(
     session: AsyncSession = Depends(get_async_session),
@@ -33,7 +34,8 @@ async def get_all(
     response_model=CharityProjectDB,
     response_model_exclude_none=True,
     dependencies=[Depends(current_superuser)],
-    status_code=status.HTTP_200_OK
+    status_code=status.HTTP_200_OK,
+    summary='Новый проект'
 )
 async def create(
     charity_project: CharityProjectCreate,
@@ -48,7 +50,8 @@ async def create(
 @router.patch(
     '/{project_id}',
     response_model=CharityProjectDB,
-    dependencies=[Depends(current_superuser)]
+    dependencies=[Depends(current_superuser)],
+    summary='Обновляет существующий проект'
 )
 async def update(
     project_id: int,
@@ -68,7 +71,8 @@ async def update(
 @router.delete(
     '/{project_id}',
     response_model=CharityProjectDB,
-    dependencies=[Depends(current_superuser)]
+    dependencies=[Depends(current_superuser)],
+    summary='Удаление проекта'
 )
 async def delete(
     project_id: int,

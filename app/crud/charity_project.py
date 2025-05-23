@@ -1,11 +1,11 @@
-from typing import List, Any
+from typing import Any, List
 
 from sqlalchemy import extract, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.services import invest
 from app.crud.base import CRUDBase
 from app.models.charity_project import CharityProject
+from app.services.investment import invest
 
 
 class CRUDCharityProject(CRUDBase):

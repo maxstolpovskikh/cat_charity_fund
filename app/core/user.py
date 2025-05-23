@@ -49,11 +49,6 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
                 reason='Password should not contain e-mail'
             )
 
-    async def on_after_register(
-            self, user: User, request: Optional[Request] = None
-    ):
-        print(f'Пользователь {user.email} зарегистрирован.')
-
 
 async def get_user_manager(user_db=Depends(get_user_db)):
     yield UserManager(user_db)

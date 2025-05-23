@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     email: Optional[str] = None
 
     class Config:
+        env_prefix = 'QRK'
         env_file = '.env'
 
 
